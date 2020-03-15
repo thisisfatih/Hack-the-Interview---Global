@@ -1,0 +1,67 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'getRoundResult' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts following parameters:
+     *  1. CHARACTER winning_suit
+     *  2. CHARACTER suit1
+     *  3. INTEGER number1
+     *  4. CHARACTER suit2
+     *  5. INTEGER number2
+     */
+
+    public static string getRoundResult(char winning_suit, char suit1, int number1, char suit2, int number2)
+    {
+
+    }
+
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        char winning_suit = Console.ReadLine()[0];
+
+        int n = Convert.ToInt32(Console.ReadLine().Trim());
+
+        for (int nItr = 0; nItr < n; nItr++)
+        {
+            string[] firstMultipleInput = Console.ReadLine().TrimEnd().Split(' ');
+
+            char suit1 = firstMultipleInput[0][0];
+
+            int number1 = Convert.ToInt32(firstMultipleInput[1]);
+
+            char suit2 = firstMultipleInput[2][0];
+
+            int number2 = Convert.ToInt32(firstMultipleInput[3]);
+
+            string result = Result.getRoundResult(winning_suit, suit1, number1, suit2, number2);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
