@@ -1,0 +1,242 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    /*
+     * Complete the guestTable function below.
+     */
+    
+    static void listWriter(List<int> listW) {
+         
+        for(int i=0;i<listW.Count;i++){
+            Console.WriteLine(listW[i]);        
+        }
+
+    }
+    
+    static int findBiggest(List<int> listW) {
+        var biggest = 0;
+        for(int i=0;i<listW.Count;i++){
+            if(listW[i]>biggest)
+                biggest=listW[i];
+        }
+        return biggest;
+    }
+    
+    static int findBiggestIndex(List<int> listW) {
+        var biggest = 0;
+        var biggestIndex = 0;
+
+        for(int i=0;i<listW.Count;i++){
+            if(listW[i]>biggest){
+                biggest=listW[i];
+                biggestIndex=i;
+        }}
+        return biggestIndex;
+    }
+    
+    static void solve(List<List<int>> students, List<List<int>> tables, int m, int n, int t, int k)
+    {
+        
+        var flag=true;
+        
+        for(int i=0;i<tables.Count;i++){
+            if(tables[i].Count>n ){
+                flag=false;
+            }
+        }
+        
+        if(flag){
+            
+            for(int i=0;i<tables.Count;i++){
+                tables[i].Sort();
+                tables[i].Reverse();
+            }
+            
+            for(int i=0;i<students.Count;i++){
+                students[i].Sort();
+                students[i].Reverse();
+            }
+            
+            List<int> sumStudents = new List<int>();
+            List<int> sumTables = new List<int>();
+
+            for(int i=0;i<students.Count;i++){
+                var tempSum = 0;
+                for(int j=0;j<students[i].Count;j++){
+                    tempSum=tempSum+students[i][j];
+                }
+                sumStudents.Add(tempSum);
+            }
+            
+            
+            for(int i=0;i<tables.Count;i++){
+                var tempSum = 0;
+                for(int j=0;j<tables[i].Count;j++){
+                    tempSum=tempSum+tables[i][j];
+                }
+                sumTables.Add(tempSum);
+            }
+            
+            List<int> teamPowersOrdered = new List<int>();
+            List<int> teamIndexesOrdered = new List<int>();
+
+            var strongestTeamScore = 0;
+            var strongestTeamIndex = 0;
+            
+            List<int> sumStudentsCopy = new List<int>();
+            
+            for(int o=0;o<sumStudents.Count;o++){
+                
+                sumStudentsCopy.Add(students[o][0]);
+            }
+            
+            for(int o=0;o<sumStudentsCopy.Count;o++){
+                
+                strongestTeamScore = 0;
+                strongestTeamIndex = 0;
+                
+                for(int i=0;i<sumStudentsCopy.Count;i++){
+                
+                    if(sumStudentsCopy[i]>strongestTeamScore){
+                        strongestTeamScore = sumStudentsCopy[i];
+                        strongestTeamIndex = i;
+                    }
+                
+                }
+                
+                teamPowersOrdered.Add(strongestTeamScore);
+                teamIndexesOrdered.Add(strongestTeamIndex);
+                
+                sumStudentsCopy[strongestTeamIndex]=0;
+                
+            }
+        
+                        //listWriter(teamPowersOrdered);
+                        //listWriter(teamIndexesOrdered);
+
+            List<int> groupMoves = new List<int>();
+            for(int i=0;i<tables.Count;i++){
+                groupMoves.Add(k*n);
+            }
+            
+            var possibleMovesIndividual = k;
+
+            var summ= 0;
+            
+            // find biggest table 
+            for(int i=0;i<tables.Count;i++){
+                
+                //Console.WriteLine("round " + i);        
+
+                
+                var biggestSum = findBiggest(sumTables);
+                var biggestIndex = findBiggestIndex(sumTables);
+                
+                //Console.WriteLine("biggestSum " + biggestSum);
+                //Console.WriteLine("biggestIndex " + biggestIndex);
+                
+                var groupID = 0;
+                
+                for(int ppp=0;ppp<teamPowersOrdered.Count;ppp++){
+                    
+                    if(groupMoves[ppp]>=tables[biggestIndex].Count){
+                     
+                        groupID=ppp;
+                        break;
+                        
+                    }
+                }
+                
+                for(int ppp=0;ppp<tables[biggestIndex].Count;ppp++){
+                    
+                    
+                    //Console.WriteLine("table biggest " + tables[biggestIndex][ppp]);        
+                    //Console.WriteLine("student biggest " + students[teamIndexesOrdered[groupID]][0]);        
+
+                    summ = summ + (tables[biggestIndex][ppp]*students[teamIndexesOrdered[groupID]][0]);
+                                 
+                    groupMoves[groupID]--;
+                                        //Console.WriteLine("groupMoves " + groupMoves[groupID]);        
+
+                    possibleMovesIndividual--;
+                                        //Console.WriteLine("possibleMovesIndividual " + possibleMovesIndividual);
+                    
+                    if(possibleMovesIndividual==0){
+                        //Console.WriteLine("students[teamIndexesOrdered[groupID]][0]" + students[teamIndexesOrdered[groupID]][0]);
+                        //Console.WriteLine("teamPowersOrdered[groupID] " + teamPowersOrdered[groupID]);
+
+                        //sumStudents[teamIndexesOrdered[groupID]]=sumStudents[teamIndexesOrdered[groupID]]-students[teamIndexesOrdered[groupID]][0];
+                        students[teamIndexesOrdered[groupID]].RemoveAt(0);
+                        possibleMovesIndividual=k;
+                    }
+
+                    
+                }
+                
+                sumTables[biggestIndex]=0;
+                //Console.WriteLine("--- ");  
+                
+                
+            }
+    
+            Console.WriteLine(summ);  
+            
+        }
+        else{
+            Console.WriteLine("-1");        
+        }        
+    }
+
+    static void Main(string[] args) {
+        
+        var numberOfTestCases = Convert.ToInt16(Console.ReadLine());
+        
+        for (int tcItr = 0; tcItr < numberOfTestCases; tcItr++) {
+            
+            string[] mn = Console.ReadLine().Split(' ');
+
+            int m = Convert.ToInt32(mn[0]);
+
+            int n = Convert.ToInt32(mn[1]);
+            
+            int t = Convert.ToInt32(mn[2]);
+            
+            List<List<int>> students = new List<List<int>>();
+                        
+            for (int charmRowItr = 0; charmRowItr < m; charmRowItr++) {
+                
+                string[] tempR = Console.ReadLine().Split(' ');
+                
+                students.Add(new List<int>());
+                
+                for(int i=0;i<tempR.Length;i++){
+                    students[charmRowItr].Add(Convert.ToInt16(tempR[i]));
+                }
+                
+            }
+            
+            
+            List<List<int>> tables = new List<List<int>>();
+            
+            for (int tItr = 0; tItr < t; tItr++) {
+                
+                string[] tempR = Console.ReadLine().Split(' ');
+                
+                tables.Add(new List<int>());
+                    
+                for(int i=1;i<tempR.Length;i++){
+                    tables[tItr].Add(Convert.ToInt16(tempR[i]));
+                }                
+            }
+            
+            int k = Convert.ToInt32(Console.ReadLine());
+
+            solve(students,tables, m, n, t, k);
+        }
+    
+    }
+}
